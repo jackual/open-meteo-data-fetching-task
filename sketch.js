@@ -36,8 +36,16 @@ async function getData() {
   const params = {
     latitude: 51.5085,
     longitude: -0.1257,
-    current: ["apparent_temperature", "weather_code"],
-    daily: ["weather_code", "apparent_temperature_max", "apparent_temperature_min"],
+    current: [
+      "apparent_temperature",
+      "weather_code"
+    ],
+    daily: [
+      "weather_code",
+      "apparent_temperature_max",
+      "apparent_temperature_min",
+      "precipitation_probability_max"
+    ],
     forecast_days: 16,
   };
 
@@ -68,10 +76,11 @@ function draw() {
     let emoji = WMO_EMOJI[data.daily.weather_code[i]] ?? "❓";
     let max = Math.round(data.daily.apparent_temperature_max[i]);
     let min = Math.round(data.daily.apparent_temperature_min[i]);
-    return { date, emoji, max, min };
+    let pop = data.daily.precipitation_probability_max[i];
+    return { date, emoji, max, min, pop };
   });
 
-  const colX = [20, 90, 140, 200, 255];
+  const colX = [20, 90, 140, 200, 255, 310];
   const rowH = 22;
 
   textStyle(BOLD);
@@ -80,13 +89,15 @@ function draw() {
   text("SKY", colX[1], 24);
   text("HIGH", colX[2], 24);
   text("LOW", colX[3], 24);
+  text("PoP", colX[4], 24);
 
   textSize(12);
-  (days ?? []).forEach(({ date, emoji, max, min }, i) => {
+  (days ?? []).forEach(({ date, emoji, max, min, pop }, i) => {
     const y = 24 + rowH + i * rowH;
     text(date, colX[0], y);
     text(emoji, colX[1], y);
     text(`${max}°C`, colX[2], y);
     text(`${min}°C`, colX[3], y);
+    text(`${pop}%`, colX[4], y);
   });
 }
