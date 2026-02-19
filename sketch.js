@@ -36,7 +36,9 @@ async function getData() {
   const params = {
     latitude: 51.5085,
     longitude: -0.1257,
-    current: "apparent_temperature,weather_code",
+    current: ["apparent_temperature", "weather_code"],
+    daily: ["weather_code", "apparent_temperature_max", "apparent_temperature_min"],
+    forecast_days: 16,
   };
 
   const url = new URL("https://api.open-meteo.com/v1/forecast");
@@ -57,9 +59,34 @@ function draw() {
   let weatherCode = data?.current.weather_code;
 
   background(temperature * 10, 0, temperature * 10);
-  textSize(20);
-  let date = new Date(data?.current.time).toLocaleDateString().slice(0, -5);
-  const textContent = [date, WMO_EMOJI[weatherCode] ?? "❓", `Feels like ${temperature}°C`]
+  textFont("Source Code Pro");
+  textSize(12);
   fill(255);
-  text(textContent.join("\t"), 20, 40);
+
+  const days = data?.daily?.time?.map((time, i) => {
+    let date = new Date(time).toLocaleDateString([], { month: "2-digit", day: "2-digit" });
+    let emoji = WMO_EMOJI[data.daily.weather_code[i]] ?? "❓";
+    let max = Math.round(data.daily.apparent_temperature_max[i]);
+    let min = Math.round(data.daily.apparent_temperature_min[i]);
+    return { date, emoji, max, min };
+  });
+
+  const colX = [20, 90, 140, 200, 255];
+  const rowH = 22;
+
+  textStyle(BOLD);
+  textSize(13);
+  text("DATE", colX[0], 24);
+  text("SKY", colX[1], 24);
+  text("HIGH", colX[2], 24);
+  text("LOW", colX[3], 24);
+
+  textSize(12);
+  (days ?? []).forEach(({ date, emoji, max, min }, i) => {
+    const y = 24 + rowH + i * rowH;
+    text(date, colX[0], y);
+    text(emoji, colX[1], y);
+    text(`${max}°C`, colX[2], y);
+    text(`${min}°C`, colX[3], y);
+  });
 }
