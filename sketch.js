@@ -53,24 +53,13 @@ async function setup() {
 }
 
 function draw() {
-  // Check that we have the data in the console 👀
-  console.log(data?.current);
-
-  // Get the temperature & weather code 🌡
   let temperature = data?.current.apparent_temperature;
   let weatherCode = data?.current.weather_code;
 
-  // Set the background colour using that variable temperature 🎨
   background(temperature * 10, 0, temperature * 10);
-
-  // Show the WMO weather emoji ⛅
-  fill('white');
-  textAlign(CENTER);
-  textSize(80);
-  let emoji = WMO_EMOJI[weatherCode] ?? "❓";
-  text(emoji, width / 2, height / 2);
-
-  // Write the temperature at the bottom of the canvas 📝
   textSize(20);
-  text(`It feels like ${temperature}°C outside`, width / 2, height - 20);
+  let date = new Date(data?.current.time).toLocaleDateString().slice(0, -5);
+  const textContent = [date, WMO_EMOJI[weatherCode] ?? "❓", `Feels like ${temperature}°C`]
+  fill(255);
+  text(textContent.join("\t"), 20, 40);
 }
