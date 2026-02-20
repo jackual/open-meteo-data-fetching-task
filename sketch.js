@@ -46,7 +46,7 @@ async function getData() {
       "apparent_temperature_min",
       "precipitation_probability_max"
     ],
-    forecast_days: 16,
+    forecast_days: 15,
   };
 
   const url = new URL("https://api.open-meteo.com/v1/forecast");

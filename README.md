@@ -18,4 +18,4 @@ The canvas background colour is driven by the current apparent temperature.
 
 ## Weather emojis
 
-WMO condition codes are mapped to emojis using the [weather-sense WMO code table](https://weather-sense.leftium.com/wmo-codes):
+WMO condition codes are mapped to emojis using the [weather-sense WMO code table](https://weather-sense.leftium.com/wmo-codes).
